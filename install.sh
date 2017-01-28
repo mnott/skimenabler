@@ -71,6 +71,13 @@ disable it for this script to work. To do so,
    then reboot itself automatically, just let it boot
    up as normal.
 
+After running this script, you will be able to re-enable
+System Integrity Protection; to do so, follow the same
+procedure as above, but just say enable instead of
+disable:
+
+   csrutil enable; reboot
+
 EOF
 }
 

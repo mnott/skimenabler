@@ -31,6 +31,11 @@ and just execute this command:
 sudo ./install.sh
 ```
 
+Should you by accident not have disabled System Integrity Protection
+before running the script, it will tell you how to do so, and also, how
+to re-enable it afterwards.
+
+
 My prior work
 -------------
 
