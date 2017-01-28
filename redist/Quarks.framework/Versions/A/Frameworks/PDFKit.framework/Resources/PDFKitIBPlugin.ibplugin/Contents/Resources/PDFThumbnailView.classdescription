@@ -1,0 +1,7 @@
+{
+    ClassName = PDFThumbnailView; 
+    SuperClass = NSView;
+    Outlets = {
+        "pdfView" = "PDFView";
+    };
+}

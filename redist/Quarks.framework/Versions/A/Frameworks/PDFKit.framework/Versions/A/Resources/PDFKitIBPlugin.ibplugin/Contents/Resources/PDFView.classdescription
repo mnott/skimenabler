@@ -1,0 +1,16 @@
+{
+    ClassName = PDFView; 
+    SuperClass = NSView;
+	Actions = {
+        "goToFirstPage:" = "id";
+        "goToNextPage:" = "id";
+        "goToPreviousPage:" = "id";
+        "goToLastPage:" = "id";
+        "goBack:" = "id";
+        "goForward:" = "id";
+        "takeBackgroundColorFrom:" = "id";
+        "zoomIn:" = "id";
+        "zoomOut:" = "id";
+        "selectAll:" = "id";
+    }; 
+}

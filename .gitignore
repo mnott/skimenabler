@@ -1,0 +1,4 @@
+.DS_Store
+*.swp
+redist/Quarks.framework/Versions/A/Quartz
+redist/Quarks.framework/Versions/A/Quartz.ori
