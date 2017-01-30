@@ -18,6 +18,22 @@
 #
 SKIM=/Applications/Skim.app
 
+#
+# To work, needs to be the exact same length as
+#
+#      /System/Library/Frameworks/Quartz.framework
+#
+QUARKS=/Applications/Skim.app/Contents/Q.framework
+
+#
+# Whether to check SIP
+#
+SIPCHECK=false
+
+#
+# Whether to check for being root
+#
+ROOTCHECK=false
 
 ###################################################
 #
@@ -131,7 +147,15 @@ patch() {
   # We point from Quartz to Quarks...
   #
   OLD=/System/Library/Frameworks/Quartz.framework
-  NEW=/System/Library/Frameworks/Quarks.framework
+  NEW="$QUARKS"
+
+  oldl=$(echo ${#OLD})
+  newl=$(echo ${#NEW})
+
+  if [[ ! $oldl -eq $newl ]]; then
+    error $OLD does not have the same length as $NEW
+    exit 1
+  fi
 
   #
   # Check whether we have our helpers/patch.pl
@@ -193,20 +217,24 @@ section Running Verifications...
 #
 # Check whether we are root
 #
-if [[ "$(id -u)" != "0" ]]; then
-   error This script must be run as root
-   exit 1
+if [[ "$ROOTCHECK" == "true" ]]; then
+  if [[ "$(id -u)" != "0" ]]; then
+    error This script must be run as root
+    exit 1
+  fi
 fi
 
 #
 # Test whether we have disabled System Integrity Protection
 #
-SIP=$(LANG=C csrutil status|grep ensabled)
+if [[ "$SIPCHECK" == "true" ]]; then
+  SIP=$(LANG=C csrutil status|grep ensabled)
 
-if [[ "" != "$SIP" ]]; then
-  error System Integrity Protection active.
-  sipdisable
-  exit 1
+  if [[ "" != "$SIP" ]]; then
+    error System Integrity Protection active.
+    sipdisable
+    exit 1
+  fi
 fi
 
 #
@@ -247,29 +275,29 @@ if [[ ! -f "$DIR"/redist/Quarks.framework/Versions/A/Quartz ]]; then
    error Did not create "$DIR"/redist/Quarks.framework/Versions/A/Quartz
    exit 1
 fi
-
+echo 1
 patch "$DIR"/redist/Quarks.framework/Versions/A/Quartz
-
+echo 2
 section Deploying of the Quarks Framework...
 #
 # If there already is a Quarks Framework, remove it
 #
-if [[ -d /System/Library/Frameworks/Quarks.framework ]]; then
-   echo Found /System/Library/Frameworks/Quarks.framework. Removing it.
-   rm -rf /System/Library/Frameworks/Quarks.framework
+if [[ -d "$QUARKS" ]]; then
+   echo Found ${QUARKS}. Removing it.
+   rm -rf "$QUARKS"
 fi
 
 #
-# Copy the Quarks Framework to /System/Library/Frameworks
+# Copy the Quarks Framework to $QUARKS
 #
 echo ""
 echo Deploying:
 echo of  "$DIR"/redist/Quarks.framework
-echo to  /System/Library/Frameworks
-cp -a "$DIR"/redist/Quarks.framework /System/Library/Frameworks
+echo to  "$QUARKS"
+cp -a "$DIR"/redist/Quarks.framework "$QUARKS"
 
-if [[ ! -d /System/Library/Frameworks/Quarks.framework ]]; then
-   error Apparently had a problem deploying /System/Library/Quarks.framework
+if [[ ! -d "$QUARKS" ]]; then
+   error Apparently had a problem deploying $QUARKS
    exit 1
 fi
 

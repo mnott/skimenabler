@@ -28,12 +28,8 @@ you have downloaded the solution (where you find a file **install.sh**),
 and just execute this command:
 
 ```
-sudo ./install.sh
+./install.sh
 ```
-
-Should you by accident not have disabled System Integrity Protection
-before running the script, it will tell you how to do so, and also, how
-to re-enable it afterwards.
 
 
 My prior work
@@ -102,7 +98,7 @@ contains the binary
 which has an absolute reference to
 
 ```
-/System/Library/Frameworks/Quarks.framework
+/System/Library/Frameworks/Quarts.framework
 ```
 
 Similarly, inside the Skim.app, there are four files which contains
@@ -135,9 +131,33 @@ the Quartz binary mentioned above, replacing
 
 by
 
+
+```
+/Applications/Skim.app/Contents/Q.framework
+```
+
+**Note:**
+
+User Kevin L on the Skim forum tried successfully to deploy
+the **Quarks.framework** in a location that is not protected by SIP.
+The only requirement is that the location is of the same string length
+as the original Quartz.framework. I have hence adapted the install script
+and am deploying now, unless you configure otherwise, at the top of the
+script, into the Skim.app directory. I.e., instead of the "Quarks"
+location I had previously used:
+
 ```
 /System/Library/Frameworks/Quarks.framework
 ```
+
+I now use
+
+```
+/Applications/Skim.app/Contents/Q.framework
+```
+
+You can configure that at the top of the script, and the script
+checks for the identical length of the strings.
 
 That binary patch removes the need to use **install_name_tool**, which
 Andrea used, and which I did find to not work in all cases: Essentially,
@@ -186,7 +206,30 @@ top of the file, the location of Skim:
 # Your Location of Skim.app
 #
 SKIM=/Applications/Skim.app
+
+#
+# To work, needs to be the exact same length as
+#
+#      /System/Library/Frameworks/Quartz.framework
+#
+QUARKS=/Applications/Skim.app/Contents/Q.framework
+
+#
+# Whether to check SIP
+#
+SIPCHECK=false
+
+#
+# Whether to check for being root
+#
+ROOTCHECK=false
 ```
+
+You need to check for SIP only if you deploy beneath a directory
+structure beneath **/System**; in that case, and also if your location
+of **Skim.app** is not owned by you, you also need to check
+for being root, and run the script with **sudo ./install.sh** instead
+of just **./install.sh**.
 
 Then, in a Terminal window, go to the directory where you have
 **install.sh** and just run this command (though not strictly
@@ -194,7 +237,7 @@ necessary, you might want to close Skim before doing this, should
 you have Skim running):
 
 ```
-sudo ./install.sh
+./install.sh
 ```
 
 The program will attempt a large number of verifications, and it
