@@ -215,7 +215,7 @@ fi
 #
 # Test whether we have disabled System Integrity Protection
 #
-if [[ ! "$SIPCHECK" == "true" ]]; then
+if [[ "$SIPCHECK" == "true" ]]; then
   SIP=$(LANG=C csrutil status|grep ensabled)
 
   if [[ "" != "$SIP" ]]; then
