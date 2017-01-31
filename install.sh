@@ -228,7 +228,7 @@ fi
 # Test whether we have disabled System Integrity Protection
 #
 if [[ "$SIPCHECK" == "true" ]]; then
-  SIP=$(LANG=C csrutil status|grep ensabled)
+  SIP=$(LANG=C csrutil status|grep enabled)
 
   if [[ "" != "$SIP" ]]; then
     error System Integrity Protection active.
